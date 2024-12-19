@@ -195,6 +195,8 @@ public class Context
 
         void BackFillOne(HashRelativePath file)
         {
+            if (!newFiles.ContainsKey(file.Hash)) return;
+            
             var parent = newFiles[file.Hash];
             foreach (var path in file.Parts)
             {
