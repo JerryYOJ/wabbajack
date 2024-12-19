@@ -125,7 +125,7 @@ public class StandardInstaller : AInstaller<StandardInstaller>
         var missing = ModList.Archives.Where(a => !HashedArchives.ContainsKey(a.Hash)).ToList();
         if (missing.Count > 0)
         {
-            ModList.Archives = ModList.Archives.Where((a => HashedArchives.ContainsKey(a.Hash)).ToArray<Archive>();
+            ModList.Archives = ModList.Archives.Where(a => HashedArchives.ContainsKey(a.Hash)).ToArray<Archive>();
         }
 
         await ExtractModlist(token);
