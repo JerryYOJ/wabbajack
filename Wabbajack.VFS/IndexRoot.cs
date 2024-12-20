@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
+using System; // 确保导入 System 命名空间
 using Wabbajack.Hashing.xxHash64;
 using Wabbajack.Paths;
 
@@ -70,9 +71,29 @@ public class IndexRoot
 
     public VirtualFile FileForArchiveHashPath(HashRelativePath argArchiveHashPath)
     {
-        var cur = ByHash[argArchiveHashPath.Hash].First(f => f.Parent == null);
-        return argArchiveHashPath.Parts.Aggregate(cur,
-            (current, itm) => ByName[itm].First(f => f.Parent == current));
+        // var cur = ByHash[argArchiveHashPath.Hash].First(f => f.Parent == null);
+        // return argArchiveHashPath.Parts.Aggregate(cur,
+            // (current, itm) => ByName[itm].First(f => f.Parent == current));
+            
+        try
+        {
+            // Try to access the key in ByHash and use First() to find the element
+            var cur = ByHash[argArchiveHashPath.Hash].First(f => f.Parent == null);
+
+            // Use Aggregate to traverse the parts of the path
+            return argArchiveHashPath.Parts.Aggregate(cur,
+                (current, itm) => ByName[itm].First(f => f.Parent == current));
+        }
+        catch (KeyNotFoundException)
+        {
+            // If the key is not found in ByHash, return null
+            return null;
+        }
+        catch (InvalidOperationException)
+        {
+            // If First() or Aggregate() fails (no matching element), return null
+            return null;
+        }
     }
 
     public static class EmptyLookup<TKey, TElement>

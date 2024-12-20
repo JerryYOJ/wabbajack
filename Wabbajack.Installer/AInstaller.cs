@@ -223,6 +223,7 @@ public abstract class AInstaller<T>
         NextStep(Consts.StepInstalling, "Installing files", ModList.Directives.Sum(d => d.Size), x => x.ToFileSizeString());
         var grouped = ModList.Directives
             .OfType<FromArchive>()
+            .Where(a => _vfs.Index.FileForArchiveHashPath(a.ArchiveHashPath) != null)  // Skip when no match found
             .Select(a => new {VF = _vfs.Index.FileForArchiveHashPath(a.ArchiveHashPath), Directive = a})
             .GroupBy(a => a.VF)
             .ToDictionary(a => a.Key);
